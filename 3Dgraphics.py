@@ -39,7 +39,7 @@ class Cube:
 
 	def __init__(self, pos=(0, 0, 0)):
 		x, y, z = pos
-		self.verts = [(x+X/2, y+Y/2, z+Z/2) for X, Y, Z in self.vertices]
+		self.vertices = [(x+X/2, y+Y/2, z+Z/2) for X, Y, Z in self.vertices]
 
 
 pygame.init()
@@ -49,7 +49,11 @@ screen = pygame.display.set_mode((w,h))
 clock = pygame.time.Clock()
 
 cam = Cam((0, 0, -5))
-cubes = [Cube((0, 0, 0)), Cube((-2, 0, 0)), Cube((2, 0, 0))]
+cubes = [
+	Cube((0, 0, 0)),
+	Cube((-3, 0, 0)),
+	Cube((3, 0, 0))
+]
 
 pygame.event.get()
 pygame.mouse.get_rel()
@@ -78,7 +82,7 @@ while True:
 
 		vert_list = []; screen_coords = []
 
-		for x, y, z in obj.verts:
+		for x, y, z in obj.vertices:
 			x -= cam.pos[0]
 			y -= cam.pos[1]
 			z -= cam.pos[2]
@@ -104,28 +108,8 @@ while True:
 				coords = [screen_coords[i] for i in face]
 				face_list += [coords]
 				face_color += [obj.colors[f]]
-
 				depth += [sum(sum(vert_list[j][i] for j in face)**2 for i in range(3))]
 
-
-	'''
-	for edge in edges:
-
-		points = []
-		for x, y, z in (verts[edge[0]], verts[edge[1]]):
-			x -= cam.pos[0]
-			y -= cam.pos[1]
-			z -= cam.pos[2]
-
-			x, z = rotate2d((x, z), cam.rot[1])
-			y, z = rotate2d((y, z), cam.rot[0])
-
-			f = (w / 2) / z
-			x, y = x * f, y * f
-			points += [(cx + int(x), cy + int(y))]
-
-		pygame.draw.line(screen, (0, 0, 0), points[0], points[1], 1)
-	'''
 
 	# final drawing part, all faces from all objects
 	order = sorted(range(len(face_list)), key = lambda i: depth[i], reverse = 1)
