@@ -16,8 +16,8 @@ class Cam:
 			x, y = event.rel
 			x /= 1000 #mouse sensitivity
 			y /= 1000
-			self.rot[0] += y
-			self.rot[1] += x
+			#self.rot[0] += y
+			#self.rot[1] += x
 
 	def update(self, dt, key):
 		s = dt * 10
@@ -61,10 +61,10 @@ for x in [-3, 0, 3]:
 			#print(x, y, z)
 			cubes += [Cube((x, y, z))]
 
-pygame.event.get()
-pygame.mouse.get_rel()
-pygame.mouse.set_visible(0)
-pygame.event.set_grab(1)
+#pygame.event.get()
+#pygame.mouse.get_rel()
+#pygame.mouse.set_visible(0)
+#pygame.event.set_grab(1)
 
 while True:
 	dt = clock.tick() / 1000
