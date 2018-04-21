@@ -31,6 +31,11 @@ class Cam:
 		if key[pygame.K_a]: self.pos[0] -= y; self.pos[2] += x;
 		if key[pygame.K_d]: self.pos[0] += y; self.pos[2] -= x;
 
+		if key[pygame.K_UP]:    self.rot[0] -= 0.01;
+		if key[pygame.K_DOWN]:  self.rot[0] += 0.01;
+		if key[pygame.K_LEFT]:  self.rot[1] -= 0.01;
+		if key[pygame.K_RIGHT]: self.rot[1] += 0.01;
+
 class Cube:
 	vertices = (-1, -1, -1), (1, -1, -1), (1, 1, -1), (-1, 1, -1), (-1, -1, 1), (1, -1, 1), (1, 1, 1), (-1, 1, 1)
 	edges = (0, 1), (1, 2), (2, 3), (3, 0), (4, 5), (5, 6), (6, 7), (7, 4), (0, 4), (1, 5), (2, 6), (3, 7)
@@ -44,16 +49,17 @@ class Cube:
 
 pygame.init()
 
-w,h = 800,800; cx,cy = w//2,h//2
+w,h = 1280,720; cx,cy = w//2,h//2
 screen = pygame.display.set_mode((w,h))
 clock = pygame.time.Clock()
 
 cam = Cam((0, 0, -5))
-cubes = [
-	Cube((0, 0, 0)),
-	Cube((-3, 0, 0)),
-	Cube((3, 0, 0))
-]
+cubes = []
+for x in [-3, 0, 3]:
+	for y in [-3, 0, 3]:
+		for z in [-3, 0, 3]:
+			#print(x, y, z)
+			cubes += [Cube((x, y, z))]
 
 pygame.event.get()
 pygame.mouse.get_rel()
