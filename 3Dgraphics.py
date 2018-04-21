@@ -8,16 +8,16 @@ class Cam:
 	def update(self, dt, key):
 		s = dt * 10
 
-		if key[pygame.K_o]: self.pos[2] -= s;
-		if key[pygame.K_p]: self.pos[2] += s;
+		if key[pygame.K_o]: self.pos[2] += s;
+		if key[pygame.K_p]: self.pos[2] -= s;
 		if key[pygame.K_w]: self.pos[1] -= s;
 		if key[pygame.K_s]: self.pos[1] += s;
 		if key[pygame.K_a]: self.pos[0] -= s;
 		if key[pygame.K_d]: self.pos[0] += s;
 
-
 pygame.init()
-w,h = 400,400; cx,cy = w//2,h//2
+
+w,h = 800,800; cx,cy = w//2,h//2
 screen = pygame.display.set_mode((w,h))
 clock = pygame.time.Clock()
 
@@ -34,14 +34,6 @@ while True:
 
 	screen.fill((255, 255, 255))
 
-	'''
-	for x, y, z in verts:
-		z += 5
-		f = 200/z
-		x,y = x * f, y * f
-		pygame.draw.circle(screen, (0, 0, 0), (cx + int(x), cy + int(y)), 2)
-	'''
-
 	for edge in edges:
 
 		points = []
@@ -49,7 +41,8 @@ while True:
 			x -= cam.pos[0]
 			y -= cam.pos[1]
 			z -= cam.pos[2]
-			f = 200 / z
+
+			f = (w / 2) / z
 			x, y = x * f, y * f
 			points += [(cx + int(x), cy + int(y))]
 
