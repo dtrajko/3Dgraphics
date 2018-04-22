@@ -93,10 +93,9 @@ while True:
 			y, z = rotate2d((y, z), cam.rot[0])
 			vert_list += [(x, y, z)]
 
-			if z != 0:
-				f = fov / z
-			else:
-				f = min(w, h)
+			if z < 0.001:
+				z = 0.001
+			f = fov / z
 			x, y = x * f, y * f
 			screen_coords += [(cx + int(x), cy + int(y))]
 
