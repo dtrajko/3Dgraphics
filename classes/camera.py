@@ -1,6 +1,6 @@
 import pygame, math
 
-class Cam:
+class Camera:
 	def __init__(self, pos=(0, 0, 0), rot=(0, 0, 0)):
 		self.pos = list(pos)
 		self.pos_new = list(pos)
@@ -12,8 +12,8 @@ class Cam:
 			x /= 1000 #mouse sensitivity
 			y /= 1000
 			z = 0
-			self.rot[0] += x
-			self.rot[1] += y
+			self.rot[0] += y
+			self.rot[1] += x
 			self.rot[2] += z
 
 	def update(self, dt, key, shapes):
