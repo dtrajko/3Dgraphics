@@ -1,51 +1,7 @@
 import pygame, sys, math, os
 
+from classes.cam import Cam
 from classes.mesh import Mesh
-
-class Cam:
-	def __init__(self, pos=(0, 0, 0), rot=(0, 0, 0)):
-		self.pos = list(pos)
-		self.pos_new = list(pos)
-		self.rot = list(rot)
-
-	def events(self, event):
-		if event.type == pygame.MOUSEMOTION:
-			x, y = event.rel
-			x /= 1000 #mouse sensitivity
-			y /= 1000
-			z = 0
-			self.rot[0] += x
-			self.rot[1] += y
-			self.rot[2] += z
-
-	def update(self, dt, key):
-
-		speed = dt * 5
-		x, y = speed * math.sin(self.rot[1]), speed * math.cos(self.rot[1])
-		z = speed
-
-		if key[pygame.K_q]: self.pos_new[1] -= z
-		if key[pygame.K_e]: self.pos_new[1] += z
-
-		if key[pygame.K_w]: self.pos_new[0] += x; self.pos_new[2] += y
-		if key[pygame.K_s]: self.pos_new[0] -= x; self.pos_new[2] -= y
-		if key[pygame.K_a]: self.pos_new[0] -= y; self.pos_new[2] += x
-		if key[pygame.K_d]: self.pos_new[0] += y; self.pos_new[2] -= x
-
-		if key[pygame.K_UP]:    self.rot[0] -= 0.2 * speed
-		if key[pygame.K_DOWN]:  self.rot[0] += 0.2 * speed
-		if key[pygame.K_LEFT]:  self.rot[1] -= 0.2 * speed
-		if key[pygame.K_RIGHT]: self.rot[1] += 0.2 * speed
-
-		inCollision = False
-		for c in cubes:
-			if c.isColliding(self.pos_new):
-				inCollision = True
-				break
-
-		if inCollision == False:
-			self.pos = self.pos_new
-
 
 
 class Cube(Mesh):
@@ -77,10 +33,10 @@ clock = pygame.time.Clock()
 cam = Cam((14, -6, -16), (0.3, -0.75, 0))
 
 cube_data = [(-3, -1, 0, 1, 1, 1), (0, -1, 0, 1, 1, 1), (3, -1, 0, 1, 1, 1), (0, 0, 0, 15, 0.5, 15)]
-cubes = [Cube((x, y, z), (sx, sy, sz)) for x, y, z, sx, sy, sz in cube_data]
+shapes = [Cube((x, y, z), (sx, sy, sz)) for x, y, z, sx, sy, sz in cube_data]
 
 pyramid_data = [(-3, -2, 0, 1, 1, 1), (0, -2, 0, 1, 1, 1), (3, -2, 0, 1, 1, 1)]
-pyramids = [Pyramid((x, y, z), (sx, sy, sz)) for x, y, z, sx, sy, sz in pyramid_data]
+shapes += [Pyramid((x, y, z), (sx, sy, sz)) for x, y, z, sx, sy, sz in pyramid_data]
 
 while True:
 	dt = clock.tick() / 1000
@@ -103,11 +59,9 @@ while True:
 	# need to get all faces for all objects
 	face_list = []; face_color = []; depth = [] # stores all face data
 
-	for cube in cubes:
-		cube.render(cam, face_list, face_color, depth)
+	for shape in shapes:
+		shape.render(cam, face_list, face_color, depth)
 
-	for pyramid in pyramids:
-		pyramid.render(cam, face_list, face_color, depth)
 
 	# final drawing part, all faces from all objects
 	order = sorted(range(len(face_list)), key = lambda i: depth[i], reverse = 1)
@@ -121,4 +75,4 @@ while True:
 	pygame.display.flip()
 
 	key = pygame.key.get_pressed()
-	cam.update(dt, key)
+	cam.update(dt, key, shapes)
