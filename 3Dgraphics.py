@@ -1,10 +1,6 @@
 import pygame, sys, math, os
 
-def rotate2d(pos, rad):
-	x, y = pos
-	rx = x * math.cos(rad) - y * math.sin(rad)
-	ry = y * math.cos(rad) + x * math.sin(rad)
-	return rx, ry
+from classes.mesh import Mesh
 
 class Cam:
 	def __init__(self, pos=(0, 0, 0), rot=(0, 0, 0)):
@@ -50,134 +46,19 @@ class Cam:
 		if inCollision == False:
 			self.pos = self.pos_new
 
-class Cube:
-	vertices = (-1, -1, -1), (1, -1, -1), (1, 1, -1), (-1, 1, -1), (-1, -1, 1), (1, -1, 1), (1, 1, 1), (-1, 1, 1)
-	edges = (0, 1), (1, 2), (2, 3), (3, 0), (4, 5), (5, 6), (6, 7), (7, 4), (0, 4), (1, 5), (2, 6), (3, 7)
-	faces = (0, 1, 2, 3), (4, 5, 6, 7), (0, 1, 5, 4), (2, 3, 7, 6), (0, 3, 7, 4), (1, 2, 6, 5)
-	colors = (255, 0, 0), (0, 255, 255), (255, 255, 0), (255, 0, 255), (0, 0, 255), (0, 255, 0)
-	pos = (0, 0, 0)
-	minX, minY, minZ = 9999, 9999, 9999
-	maxX, maxY, maxZ = -9999, -9999, -9999
-
-	def __init__(self, pos=(0, 0, 0), size=1):
-		self.pos = list(pos)
-		x, y, z = pos
-		self.vertices = [((x + X / 2 * size), (y + Y / 2 * size), (z + Z / 2 * size)) for X, Y, Z in self.vertices]
-		#bounding box:
-		for v in self.vertices:
-			self.minX = min(self.minX, v[0])
-			self.maxX = max(self.maxX, v[0])
-			self.minY = min(self.minY, v[1])
-			self.maxY = max(self.maxY, v[1])
-			self.minZ = min(self.minZ, v[2])
-			self.maxZ = max(self.maxZ, v[2])
-
-	def isColliding(self, camPos=(0, 0, 0)):
-		colliding = False
-		if (camPos[0] > self.minX and camPos[0] < self.maxX and 
-			camPos[1] > self.minY and camPos[1] < self.maxY and 
-			camPos[2] > self.minZ and camPos[2] < self.maxZ): colliding = True
-		return colliding
-
-	def render(self, cam, face_list, face_color, depth):
-
-		vert_list = []; screen_coords = []
-
-		for x, y, z in self.vertices:
-			x -= cam.pos[0]
-			y -= cam.pos[1]
-			z -= cam.pos[2]
-			x, z = rotate2d((x, z), cam.rot[1])
-			y, z = rotate2d((y, z), cam.rot[0])
-			vert_list += [(x, y, z)]
-
-			if z < 0.001:
-				z = 0.001
-			f = fov / z
-			x, y = x * f, y * f
-			screen_coords += [(cx + int(x), cy + int(y))]
-
-		for f in range(len(self.faces)):
-			face = self.faces[f]
-
-			on_screen = False
-			polyCoef = 6
-			for i in face:
-				x, y = screen_coords[i]
-				if vert_list[i][2] > 0 and x > -(polyCoef-1) * w and x < polyCoef * w and y > -(polyCoef-1) * h and y < polyCoef * h:
-					on_screen = True
-					break
-
-			if on_screen:
-				coords = [screen_coords[i] for i in face]
-				face_list += [coords]
-				face_color += [self.colors[f]]
-				depth += [sum(sum(vert_list[j][i] for j in face)**2 for i in range(3))]
 
 
-class Pyramid:
+class Cube(Mesh):
+	pass
+
+class Pyramid(Mesh):
 	vertices = (-1, 1, -1), (1, 1, -1), (1, 1, 1), (-1, 1, 1), (0, -1, 0)
 	edges = (0, 1), (1, 2), (2, 3), (3, 0), (0, 4), (1, 4), (2, 4), (3, 4)
 	faces = (0, 1, 4), (1, 2, 4), (2, 3, 4), (3, 0, 4), (0, 1, 2), (2, 3, 0)
 	colors = (255, 0, 0), (0, 255, 0), (0, 255, 255), (0, 0, 255), (255, 0, 255), (255, 0, 255)
-	pos = (0, 0, 0)
-	minX, minY, minZ = 9999, 9999, 9999
-	maxX, maxY, maxZ = -9999, -9999, -9999
 
-	def __init__(self, pos=(0, 0, 0), size=1):
-		self.pos = list(pos)
-		x, y, z = pos
-		self.vertices = [((x + X / 2 * size), (y + Y / 2 * size), (z + Z / 2 * size)) for X, Y, Z in self.vertices]
-		#bounding box:
-		for v in self.vertices:
-			self.minX = min(self.minX, v[0])
-			self.maxX = max(self.maxX, v[0])
-			self.minY = min(self.minY, v[1])
-			self.maxY = max(self.maxY, v[1])
-			self.minZ = min(self.minZ, v[2])
-			self.maxZ = max(self.maxZ, v[2])
-
-	def isColliding(self, camPos=(0, 0, 0)):
-		colliding = False
-		if (camPos[0] > self.minX and camPos[0] < self.maxX and 
-			camPos[1] > self.minY and camPos[1] < self.maxY and 
-			camPos[2] > self.minZ and camPos[2] < self.maxZ): colliding = True
-		return colliding
-
-	def render(self, cam, face_list, face_color, depth):
-
-		vert_list = []; screen_coords = []
-
-		for x, y, z in self.vertices:
-			x -= cam.pos[0]
-			y -= cam.pos[1]
-			z -= cam.pos[2]
-			x, z = rotate2d((x, z), cam.rot[1])
-			y, z = rotate2d((y, z), cam.rot[0])
-			vert_list += [(x, y, z)]
-
-			if z < 0.001:
-				z = 0.001
-			f = fov / z
-			x, y = x * f, y * f
-			screen_coords += [(cx + int(x), cy + int(y))]
-
-		for f in range(len(self.faces)):
-			face = self.faces[f]
-
-			on_screen = False
-			polyCoef = 6
-			for i in face:
-				x, y = screen_coords[i]
-				if vert_list[i][2] > 0 and x > -(polyCoef-1) * w and x < polyCoef * w and y > -(polyCoef-1) * h and y < polyCoef * h:
-					on_screen = True
-					break
-
-			if on_screen:
-				coords = [screen_coords[i] for i in face]
-				face_list += [coords]
-				face_color += [self.colors[f]]
-				depth += [sum(sum(vert_list[j][i] for j in face)**2 for i in range(3))]
+	def __init__(self, pos=(0, 0, 0), scale=(1, 1, 1)):
+		super().__init__(pos, scale)
 
 
 pygame.init()
@@ -187,19 +68,19 @@ pygame.mouse.get_rel()
 pygame.mouse.set_visible(0)
 pygame.event.set_grab(1)
 
-w,h = 1280, 720; cx,cy = w//2,h//2; fov = min(w, h)
+w,h = 1280, 720;
 os.environ['SDL_VIDEO_CENTERED'] = '1'
 window_title = '3D Graphics'
 screen = pygame.display.set_mode((w,h))
 clock = pygame.time.Clock()
 
-cam = Cam((-1, 0, -4), (0, 0, 0))
+cam = Cam((14, -6, -16), (0.3, -0.75, 0))
 
-cube_data = [(0, 1, 1, 1), (3, 0.5, 0.5, 2), (7, 0, 0, 3)]
-cubes = [Cube((x, y, z), s) for x, y, z, s in cube_data]
+cube_data = [(-3, -1, 0, 1, 1, 1), (0, -1, 0, 1, 1, 1), (3, -1, 0, 1, 1, 1), (0, 0, 0, 15, 0.5, 15)]
+cubes = [Cube((x, y, z), (sx, sy, sz)) for x, y, z, sx, sy, sz in cube_data]
 
-pyramid_data = [(0, -0.5, 1, 1), (3, -2.5, 0.5, 2), (7, -4, 0, 3)]
-pyramids = [Pyramid((x, y, z), s) for x, y, z, s in pyramid_data]
+pyramid_data = [(-3, -2, 0, 1, 1, 1), (0, -2, 0, 1, 1, 1), (3, -2, 0, 1, 1, 1)]
+pyramids = [Pyramid((x, y, z), (sx, sy, sz)) for x, y, z, sx, sy, sz in pyramid_data]
 
 while True:
 	dt = clock.tick() / 1000
