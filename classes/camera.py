@@ -19,16 +19,16 @@ class Camera:
 	def update(self, dt, key, shapes):
 
 		speed = dt * 5
-		x, y = speed * math.sin(self.rot[1]), speed * math.cos(self.rot[1])
+		x, y = speed * math.sin(self.rot[1]), speed * -math.cos(self.rot[1])
 		z = speed
 
 		if key[pygame.K_q]: self.pos_new[1] += z
 		if key[pygame.K_e]: self.pos_new[1] -= z
 
-		if key[pygame.K_w]: self.pos_new[0] += x; self.pos_new[2] += y
-		if key[pygame.K_s]: self.pos_new[0] -= x; self.pos_new[2] -= y
-		if key[pygame.K_a]: self.pos_new[0] -= y; self.pos_new[2] += x
-		if key[pygame.K_d]: self.pos_new[0] += y; self.pos_new[2] -= x
+		if key[pygame.K_w]: self.pos_new[0] += x; self.pos_new[2] -= y
+		if key[pygame.K_s]: self.pos_new[0] -= x; self.pos_new[2] += y
+		if key[pygame.K_a]: self.pos_new[0] += y; self.pos_new[2] += x
+		if key[pygame.K_d]: self.pos_new[0] -= y; self.pos_new[2] -= x
 
 		if key[pygame.K_UP]:    self.rot[0] -= 0.2 * speed
 		if key[pygame.K_DOWN]:  self.rot[0] += 0.2 * speed
