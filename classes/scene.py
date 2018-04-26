@@ -3,7 +3,7 @@ from classes.pyramid import Pyramid
 
 class Scene:
 
-	cube_data = [(-3, -1, 0, 1, 1, 1), (0, -1, 0, 1, 1, 1), (3, -1, 0, 1, 1, 1), (0, 0, 0, 15, 0.5, 15)]
+	cube_data = [(0, 0, 0, 15, 0.5, 15),(-3, -1, 0, 1, 1, 1), (0, -1, 0, 1, 1, 1), (3, -1, 0, 1, 1, 1)]
 	pyramid_data = [(-3, -2, 0, 1, 1, 1), (0, -2, 0, 1, 1, 1), (3, -2, 0, 1, 1, 1)]
 	entities = list()
 	camera = None

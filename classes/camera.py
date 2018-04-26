@@ -22,8 +22,8 @@ class Camera:
 		x, y = speed * math.sin(self.rot[1]), speed * math.cos(self.rot[1])
 		z = speed
 
-		if key[pygame.K_q]: self.pos_new[1] -= z
-		if key[pygame.K_e]: self.pos_new[1] += z
+		if key[pygame.K_q]: self.pos_new[1] += z
+		if key[pygame.K_e]: self.pos_new[1] -= z
 
 		if key[pygame.K_w]: self.pos_new[0] += x; self.pos_new[2] += y
 		if key[pygame.K_s]: self.pos_new[0] -= x; self.pos_new[2] -= y

@@ -18,7 +18,7 @@ screen = pygame.display.set_mode((w,h))
 clock = pygame.time.Clock()
 
 display = Display()
-camera = Camera((14, -6, -16), (0.3, -0.75, 0))
+camera = Camera((0, 4, -20), (0, 0, 0))
 scene = Scene(camera)
 renderer = Renderer()
 

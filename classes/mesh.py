@@ -44,7 +44,7 @@ class Mesh:
 
 		for x, y, z in self.vertices:
 			x -= cam.pos[0]
-			y -= cam.pos[1]
+			y += cam.pos[1]
 			z -= cam.pos[2]
 			x, z = Util.rotate2d((x, z), cam.rot[1])
 			y, z = Util.rotate2d((y, z), cam.rot[0])
