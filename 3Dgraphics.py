@@ -8,7 +8,7 @@ from classes.renderer import Renderer
 
 pygame.init()
 pygame.event.get()
-pygame.event.set_grab(1)
+#pygame.event.set_grab(1)
 pygame.mouse.get_rel()
 pygame.mouse.set_visible(0)
 
@@ -18,13 +18,11 @@ screen = pygame.display.set_mode((w,h))
 clock = pygame.time.Clock()
 
 display = Display()
-camera = Camera((0, 4, -20), (0, 0, 0))
+camera = Camera((0, 4, -30), (0, 0, 0))
 scene = Scene(camera)
 renderer = Renderer()
 
 while True:
-
-	display.setTitle(camera, clock)
 
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
@@ -36,4 +34,4 @@ while True:
 				sys.exit()
 		camera.events(event)
 
-	renderer.render(screen, clock, scene)
+	renderer.render(screen, clock, scene, display)

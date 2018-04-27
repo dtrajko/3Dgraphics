@@ -2,27 +2,33 @@ import pygame
 
 class Renderer:
 
-	def render(self, screen, clock, scene):
+	def render(self, screen, clock, scene, display):
 
-		# need to get all faces for all objects	
-		face_list = []; face_color = []; depth = [] # stores all face data
+		dt = clock.tick() / 1000
+		camera = scene.getCamera()
 
-		screen.fill((255, 255, 255))
+		if dt % 1000 == 0:
 
-		for entity in scene.getEntities():
-			entity.render(scene.getCamera(), face_list, face_color, depth)
+			display.setTitle(camera, clock)
 
-		# final drawing part, all faces from all objects
-		order = sorted(range(len(face_list)), key = lambda i: depth[i], reverse = 1)
+			# need to get all faces for all objects	
+			face_list = []; face_color = []; depth = [] # stores all face data
 
-		for i in order:
-			try:
-				pygame.draw.polygon(screen, face_color[i], face_list[i])
-			except:
-				pass
+			screen.fill((255, 255, 255))
 
-		pygame.display.flip()
+			for entity in scene.getEntities():
+				entity.render(camera, face_list, face_color, depth)
+
+			# final drawing part, all faces from all objects
+			order = sorted(range(len(face_list)), key = lambda i: depth[i], reverse = 1)
+
+			for i in order:
+				try:
+					pygame.draw.polygon(screen, face_color[i], face_list[i])
+				except:
+					pass
+
+			pygame.display.flip()
 
 		key = pygame.key.get_pressed()
-		dt = clock.tick() / 1000
-		scene.getCamera().update(dt, key, scene.getEntities())
+		camera.update(dt, key, scene.getEntities())

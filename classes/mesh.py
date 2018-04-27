@@ -7,7 +7,7 @@ class Mesh:
 	vertices = (-1, -1, -1), (1, -1, -1), (1, 1, -1), (-1, 1, -1), (-1, -1, 1), (1, -1, 1), (1, 1, 1), (-1, 1, 1)
 	edges = (0, 1), (1, 2), (2, 3), (3, 0), (4, 5), (5, 6), (6, 7), (7, 4), (0, 4), (1, 5), (2, 6), (3, 7)
 	faces = (0, 1, 2, 3), (4, 5, 6, 7), (0, 1, 5, 4), (2, 3, 7, 6), (0, 3, 7, 4), (1, 2, 6, 5)
-	colors = (255, 69, 0), (255, 255, 0), (200, 200, 200), (0, 255, 255), (0, 0, 255), (0, 255, 0)
+	colors = (255, 69, 0), (255, 69, 0), (200, 200, 200), (0, 255, 255), (0, 255, 0), (0, 255, 0)
 	pos = (0, 0, 0)
 	minX, minY, minZ = 9999, 9999, 9999
 	maxX, maxY, maxZ = -9999, -9999, -9999
@@ -61,7 +61,7 @@ class Mesh:
 			face = self.faces[f]
 
 			on_screen = False
-			polyCoef = 6
+			polyCoef = 1
 			for i in face:
 				x, y = screen_coords[i]
 				if vert_list[i][2] > 0 and x > -(polyCoef - 1) * self.w and x < polyCoef * self.w and y > -(polyCoef - 1) * self.h and y < polyCoef * self.h:

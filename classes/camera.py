@@ -19,16 +19,17 @@ class Camera:
 	def update(self, dt, key, shapes):
 
 		speed = dt * 5
-		x, y = speed * math.sin(self.rot[1]), speed * -math.cos(self.rot[1])
+		x = speed * math.sin(self.rot[1])
+		y = speed * math.cos(self.rot[1])
 		z = speed
 
 		if key[pygame.K_q]: self.pos_new[1] += z
 		if key[pygame.K_e]: self.pos_new[1] -= z
 
-		if key[pygame.K_w]: self.pos_new[0] += x; self.pos_new[2] -= y
-		if key[pygame.K_s]: self.pos_new[0] -= x; self.pos_new[2] += y
-		if key[pygame.K_a]: self.pos_new[0] += y; self.pos_new[2] += x
-		if key[pygame.K_d]: self.pos_new[0] -= y; self.pos_new[2] -= x
+		if key[pygame.K_w]: self.pos_new[0] += x; self.pos_new[2] += y
+		if key[pygame.K_s]: self.pos_new[0] -= x; self.pos_new[2] -= y
+		if key[pygame.K_a]: self.pos_new[0] -= y; self.pos_new[2] += x
+		if key[pygame.K_d]: self.pos_new[0] += y; self.pos_new[2] -= x
 
 		if key[pygame.K_UP]:    self.rot[0] -= 0.2 * speed
 		if key[pygame.K_DOWN]:  self.rot[0] += 0.2 * speed
@@ -43,3 +44,13 @@ class Camera:
 
 		if inCollision == False:
 			self.pos = self.pos_new
+
+	def position(self, pos=(0, 0, 0)):
+		self.pos[0] += pos[0]
+		self.pos[1] += pos[1]
+		self.pos[2] += pos[2]
+
+	def rotate(self, rot=(0, 0, 0)):
+		self.rot[0] += rot[0]
+		self.rot[1] += rot[1]
+		self.rot[2] += rot[2]
